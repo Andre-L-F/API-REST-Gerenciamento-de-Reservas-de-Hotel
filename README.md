@@ -1,4 +1,4 @@
-# 🏨 API REST - Reservas de Hotel
+# 🛎️ API REST - Reservas de Hotel
 
 API desenvolvida com **Java + Spring Boot** para gerenciar reservas de hotel, incluindo criação, consulta, atualização, cancelamento, check-in, check-out e controle de detalhes da estadia.
 
