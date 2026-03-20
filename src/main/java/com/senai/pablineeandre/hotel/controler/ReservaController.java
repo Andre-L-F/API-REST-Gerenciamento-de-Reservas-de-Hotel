@@ -1,5 +1,6 @@
 package com.senai.pablineeandre.hotel.controler;
 
+import com.senai.pablineeandre.hotel.entity.Detalhe;
 import com.senai.pablineeandre.hotel.entity.Reserva;
 import com.senai.pablineeandre.hotel.enums.Status;
 import com.senai.pablineeandre.hotel.enums.TipoQuarto;
@@ -102,4 +103,35 @@ public class ReservaController {
     public ResponseEntity<Reserva> alterarTipo(@PathVariable Long id, @PathVariable TipoQuarto tipoQuarto) {
         return ResponseEntity.ok(reservaService.alterarTipoQuarto(id, tipoQuarto));
     }
+
+    @GetMapping("/com-detalhes")
+    public List<Reserva> reservasComDetalhes() {
+        return reservaService.reservasComDetalhes();
+    }
+
+    @GetMapping("/sem-detalhes")
+    public List<Reserva> reservasSemDetalhes() {
+        return reservaService.reservasSemDetalhes();
+    }
+
+    @DeleteMapping("/{id}/detalhes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removerDetalhes(@PathVariable Long id) {
+        reservaService.removerDetalhes(id);
+    }
+    @PutMapping("/{id}/detalhes")
+    public Reserva atualizarDetalhes(@PathVariable Long id, @RequestBody Detalhe detalheAtualizado) {
+        return reservaService.atualizarDetalhes(id, detalheAtualizado);
+    }
+    @GetMapping("/{id}/detalhes")
+    public Detalhe buscarDetalhes(@PathVariable Long id) {
+        return reservaService.buscarDetalhes(id);
+    }
+
+    @PostMapping("/{id}/detalhes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Reserva adicionarDetalhes(@PathVariable Long id, @RequestBody Detalhe detalhe) {
+        return reservaService.adicionarDetalhes(id, detalhe);
+    }
+
 }

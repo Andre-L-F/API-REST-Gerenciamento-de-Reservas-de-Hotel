@@ -225,13 +225,85 @@ public class ReservaService {
 
         return reservaRepository.save(reservaExiste);
     }
-
-    public Reserva adicionarDetalhes(Long id, Detalhe detalhe){
-
+    public Reserva adicionarDetalhes(Long id, Detalhe detalhe) {
         Reserva reservaExiste = buscarReserva(id);
+
+        if (reservaExiste.getStatus() != Status.PENDENTE &&
+                reservaExiste.getStatus() != Status.CONFIRMADA) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Só é possível adicionar detalhes em reservas PENDENTE ou CONFIRMADA");
+        }
+
+        if (reservaExiste.getDetalhe() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Esta reserva já possui detalhes cadastrados");
+        }
+
         reservaExiste.setDetalhe(detalhe);
         detalhe.setReserva(reservaExiste);
+
         return reservaRepository.save(reservaExiste);
     }
 
+    public List<Reserva> reservasComDetalhes() {
+        return reservaRepository.findByDetalheIsNotNull();
+    }
+
+    public List<Reserva> reservasSemDetalhes() {
+        return reservaRepository.findByDetalheIsNull();
+    }
+    public void removerDetalhes(Long id) {
+        Reserva reservaExiste = buscarReserva(id);
+
+        if (reservaExiste.getDetalhe() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "A reserva não possui detalhes cadastrados"
+            );
+        }
+
+        reservaExiste.setDetalhe(null);
+        reservaRepository.save(reservaExiste);
+    }
+    public Reserva atualizarDetalhes(Long id, Detalhe detalheAtualizado) {
+        Reserva reservaExiste = buscarReserva(id);
+
+        if (reservaExiste.getDetalhe() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "A reserva não possui detalhes cadastrados"
+            );
+        }
+
+        Detalhe detalheExistente = reservaExiste.getDetalhe();
+
+        if (detalheAtualizado.getNumeroQuarto() != null) {
+            detalheExistente.setNumeroQuarto(detalheAtualizado.getNumeroQuarto());
+        }
+
+        if (detalheAtualizado.getAndar() != null) {
+            detalheExistente.setAndar(detalheAtualizado.getAndar());
+        }
+
+        detalheExistente.setPossuiFrigobar(detalheAtualizado.isPossuiFrigobar());
+        detalheExistente.setPossuiVaranda(detalheAtualizado.isPossuiVaranda());
+        detalheExistente.setAcessibilidade(detalheAtualizado.isAcessibilidade());
+
+        if (detalheAtualizado.getObservacoesQuarto() != null) {
+            detalheExistente.setObservacoesQuarto(detalheAtualizado.getObservacoesQuarto());
+        }
+
+        return reservaRepository.save(reservaExiste);
+    }
+
+    public Detalhe buscarDetalhes(Long id) {
+        Reserva reservaExiste = buscarReserva(id);
+
+        if (reservaExiste.getDetalhe() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "A reserva não possui detalhes cadastrados"
+            );
+        }
+
+        return reservaExiste.getDetalhe();
+    }
 }

@@ -20,8 +20,9 @@ import java.util.List;
 
         List<Reserva> findByDataEntradaBetween(LocalDate inicio, LocalDate fim);
 
-        List<Reserva> findByNomeHospedeContainingIgnoreCaseOrEmailHospedeContainingIgnoreCase(
-                String nome, String email);
+        List<Reserva> findByNomeHospedeContainingIgnoreCaseOrEmailHospedeContainingIgnoreCase(String nome, String email);
 
+        List<Reserva>findByDetalheIsNotNull();
+        List<Reserva>findByDetalheIsNull();
     }
 

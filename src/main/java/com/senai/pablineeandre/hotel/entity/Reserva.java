@@ -25,7 +25,7 @@ public class Reserva {
 
     @Column
     @NotBlank
-    @Size
+    @Size(min = 3, max = 100)
     private String nomeHospede;
 
     @Column
@@ -67,7 +67,7 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,  fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Detalhe detalhe;
 
@@ -186,5 +186,7 @@ public class Reserva {
         this.id = id;
     }
 
-
+    public Detalhe getDetalhe() {
+        return detalhe;
+    }
 }
